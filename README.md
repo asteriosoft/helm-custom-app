@@ -8,7 +8,7 @@ A Helm chart for customized deploying of containerized applicatios
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | object | `{}` | Pod's affinity. Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity |
+| affinity | object | `{}` | Pod's [affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) |
 | autoscaling.enabled | bool | `false` | Enable horizontal pod autoscaling |
 | customEnv | string | `nil` | Container's environment variables |
 | external.enabled | bool | `false` | Create service with type loadbalancer for externall access |
@@ -28,20 +28,20 @@ A Helm chart for customized deploying of containerized applicatios
 | imagePullSecrets | string | `nil` | Image pull existing secret |
 | imageTag | string | `"0.1.0"` | Docker image tag |
 | ingress.enabled | bool | `false` | Create ingress for external access |
-| livenessProbe | string | `nil` | Pod's liveness probe definition. Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command |
-| nodeSelector | object | `{}` | Pod's node selector. Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/ |
+| livenessProbe | string | `nil` | Pod's [liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command) definition |
+| nodeSelector | object | `{}` | Pod's [node selector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
 | podDisruptionBudget.enabled | bool | `false` | Define pod disruption budget |
 | podDisruptionBudget.policy.minAvailable | int | `1` | Pod disruption policy |
 | prometheus.serviceMonitor.enabled | bool | `false` | Prometheus service monitor |
 | prometheus.serviceMonitor.interval | string | `"15s"` | Prometheus check interval |
-| readinessProbe | string | `nil` | Pod's readiness probe definition. Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes |
+| readinessProbe | string | `nil` | Pod's [readiness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) definition |
 | replicaCount | int | `1` | Number of pod replicas |
 | resources | object | `{}` | Pod's resources definition |
 | service.ports[0] | object | `{"name":"app-port","port":8080}` | Container's ports definition |
 | serviceAccount | object | `{}` | Pod's service account |
-| startupProbe | string | `nil` | Pod's startup probe definition. Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes |
-| tolerations | list | `[]` | Pod's tolerations. Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/ |
-| topologySpreadConstraints.enabled | bool | `false` | Enable topology spread constraints. Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/ |
+| startupProbe | string | `nil` | Pod's [startup probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes) definition |
+| tolerations | list | `[]` | Pod's [tolerations](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
+| topologySpreadConstraints.enabled | bool | `false` | Enable [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) |
 | volumeMounts | string | `nil` | Container's volume mounts |
 | volumes | string | `nil` | Pod's volumes |
 

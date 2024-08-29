@@ -107,17 +107,17 @@ podDisruptionBudget:
 
 ## Node labels for pod assignment
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-# -- Pod's node selector. Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+# -- Pod's [node selector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)
 nodeSelector: {}
 
 ## Taints to tolerate on node assignment:
 ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-# -- Pod's tolerations. Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+# -- Pod's [tolerations](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)
 tolerations: []
 
 ## Pod scheduling constraints
 ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
-# -- Pod's affinity. Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
+# -- Pod's [affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
 affinity: {}
 
 
@@ -159,17 +159,17 @@ ingress:
   #       serviceName: custom-app
   #       servicePort: 80
 
-# -- Pod's liveness probe definition. Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command
+# -- Pod's [liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command) definition
 livenessProbe:
 
-# -- Pod's readiness probe definition. Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes
+# -- Pod's [readiness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) definition
 readinessProbe:
 
-# -- Pod's startup probe definition. Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes
+# -- Pod's [startup probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes) definition
 startupProbe:
 
 topologySpreadConstraints:
-  # -- Enable topology spread constraints. Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+  # -- Enable [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
   enabled: false
 
 # Ingress configuration for Google Cloud Provider ALB
