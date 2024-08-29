@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    {{- if .Values.clusterName }}
+    cluster: {{ .Values.clusterName }}
+    {{- end }}
+  annotations:
+  {{- if .Values.gcp.backendConfig.enabled }}
+    cloud.google.com/backend-config: '{"ports": {"{{ .Values.servicePort }}": "gcp-alb-backend-config-{{ .Release.Name }}"}}'
+  {{- end }}
+spec:
+  ports:
+    - name: java-port
+      port: {{ .Values.servicePort }}
+  selector:
+    app: {{ .Release.Name }}
+    release: {{ .Release.Name }}

@@ -1,0 +1,9 @@
+{{- if .Values.gcp.frontendConfig.enabled }}
+apiVersion: networking.gke.io/v1beta1
+kind: FrontendConfig
+metadata:
+  name: gcp-alb-frontend-config-{{ .Release.Name }}
+spec:
+  redirectToHttps:
+    enabled: {{ .Values.gcp.frontendConfig.redirectToHttps }}
+{{- end }}

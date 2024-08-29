@@ -1,0 +1,32 @@
+{{- if .Values.external.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-external
+  {{- if .Values.external.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.external.annotations }}
+    {{ $key }}: "{{ $value }}"
+  {{- end }}
+  {{- end }}
+  labels:
+    app: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  type: {{ .Values.external.type }}
+  externalTrafficPolicy: {{ .Values.external.externalTrafficPolicy }}
+  ports:
+    - name: http
+      protocol: TCP
+      port: 80
+      targetPort: {{ .Values.servicePort }}
+    - name: https
+      protocol: TCP
+      port: 443
+      targetPort: {{ .Values.servicePort }}
+  selector:
+    app: {{ .Release.Name }}
+    release: {{ .Release.Name }}
+{{- end -}}

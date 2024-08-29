@@ -1,0 +1,35 @@
+{{- if .Values.prometheus.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ .Release.Name }}
+  namespace: {{ .Values.prometheus.serviceMonitor.namespace }}
+  labels:
+    app.kubernetes.io/name: {{ .Release.Name }}
+    helm.sh/chart: {{ .Chart.Name }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- if .Values.prometheus.serviceMonitor.additionalLabels }}
+{{ toYaml .Values.prometheus.serviceMonitor.additionalLabels | indent 4 -}}
+    {{- end }}
+spec:
+  jobLabel: exporter
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      release: {{ .Release.Name }}
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace }}
+  endpoints:
+  - port: {{ .Values.prometheus.serviceMonitor.portName }}
+    interval: {{ .Values.prometheus.serviceMonitor.interval }}
+    path: {{ .Values.prometheus.serviceMonitor.path }}
+    {{- if .Values.prometheus.serviceMonitor.scrapeTimeout }}
+    scrapeTimeout: {{ .Values.prometheus.serviceMonitor.scrapeTimeout }}
+    {{- end }}
+  {{- if .Values.prometheus.serviceMonitor.targetLabels }}
+  targetLabels:
+{{ toYaml .Values.prometheus.serviceMonitor.targetLabels | indent 4 -}}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,119 @@
+{{- if .Capabilities.APIVersions.Has "apps/v1" }}
+apiVersion: apps/v1
+{{- else }}
+apiVersion: apps/v1beta2
+{{- end }}
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+    namespace: {{ .Release.Namespace }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        release: {{ .Release.Name }}
+      annotations:
+    spec:
+      containers:
+        - name: {{ .Release.Name }}
+          image: "{{ .Values.image }}:{{ .Values.imageTag }}"
+          imagePullPolicy: "{{ .Values.imagePullPolicy }}"
+          ports:
+            - name: java-port
+              containerPort: {{ .Values.servicePort}}
+              protocol: TCP
+            {{- if .Values.customPorts }}
+{{ toYaml .Values.customPorts | indent 12 }}
+            {{- end }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          {{- if .Values.gcp.serviceAccountKey.enabled }}
+          volumeMounts:
+            - name: gcp-sa-key
+              mountPath: {{ .Values.gcp.serviceAccountKey.monthPath }}
+              subPath: {{ .Values.gcp.serviceAccountKey.subPath }}
+          {{- end }}
+          env:
+          - name: HEAP_OPTS
+            value: "{{ .Values.heapOptions }}"
+          {{- if .Values.configServer }}
+          - name: CONFIG_SERVER_URL
+            value: "{{ .Values.configServer.url }}"
+          - name: CONFIG_SERVER_PROFILE
+            value: "{{ .Values.configServer.profile }}"
+          {{- end }}
+          {{- if .Values.vault }}
+          - name: VAULT_ROLE_ID
+            value: "{{ .Values.vault.roleId }}"
+          - name: VAULT_SECRET_ID
+            value: "{{ .Values.vault.secretId }}"
+          - name: VAULT_HOST
+            value: "{{ .Values.vault.host }}"
+          - name: VAULT_BACKEND
+            value: "{{ .Values.vault.backend }}"
+          {{- end }}
+          {{- if .Values.gcp.serviceAccountKey.enabled }}
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: "{{ .Values.gcp.serviceAccountKey.monthPath }}"
+          {{- end }}
+          {{- range $key, $value := .Values.customEnv }}
+          - name: {{ $key | quote }}
+            value: {{ $value | quote }}
+          {{- end }}
+          {{- if .Values.livenessProbe }}
+          livenessProbe:
+{{ toYaml .Values.livenessProbe | trim | indent 12 }}
+          {{- end }}
+          {{- if .Values.readinessProbe }}
+          readinessProbe:
+{{ toYaml .Values.readinessProbe | trim | indent 12 }}
+          {{- end }}
+          {{- if .Values.startupProbe }}
+          startupProbe:
+{{ toYaml .Values.startupProbe | trim | indent 12 }}
+          {{- end }}
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.imagePullSecrets | indent 8 }}
+      {{- end }}
+      volumes:
+      {{- if .Values.gcp.serviceAccountKey.enabled }}
+        - name: gcp-sa-key
+          secret:
+            secretName: {{ .Values.gcp.serviceAccountKey.secretName }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+      {{- end }}
+      {{- if .Values.topologySpreadConstraints.enabled }}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: {{ .Release.Name }}
+          matchLabelKeys:
+            - pod-template-hash
+      {{- end }}
+

@@ -1,0 +1,9 @@
+{{- if .Values.gcp.managedCertificate.enabled }}
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: gcp-managed-cert-{{ .Release.Name }}
+spec:
+  domains:
+    - {{ .Values.gcp.managedCertificate.domain }}
+{{- end }}

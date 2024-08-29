@@ -1,0 +1,10 @@
+{{- if .Values.gcp.backendConfig.enabled }}
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: gcp-alb-backend-config-{{ .Release.Name }}
+spec:
+  timeoutSec: {{ .Values.gcp.backendConfig.timeout }}
+  logging:
+    enable: {{ .Values.gcp.backendConfig.logging }}
+{{- end }}
