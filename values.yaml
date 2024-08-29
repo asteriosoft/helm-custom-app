@@ -127,7 +127,7 @@ prometheus:
   serviceMonitor:
     # -- Prometheus service monitor
     enabled: false
-    # -- Prometheus check interval
+    # -- Prometheus scrape interval
     interval: "15s"
 
 ## External Access
