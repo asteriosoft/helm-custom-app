@@ -65,8 +65,8 @@ spec:
       imagePullSecrets:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
       {{- end }}
-      volumes:
       {{- if .Values.volumes }}
+      volumes:
 {{ toYaml .Values.volumes | trim | indent 8 }}
       {{- end}}
       {{- if .Values.nodeSelector }}

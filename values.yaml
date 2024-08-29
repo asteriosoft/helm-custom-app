@@ -2,30 +2,37 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+# -- Number of pod replicas
 replicaCount: 1
 
 ## Image Info
+# -- Docker image source
 image: repo/image
+# -- Docker image tag
 imageTag: 0.1.0
 
 ## Specify a imagePullPolicy
 ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+# -- Image pull policy
 imagePullPolicy: IfNotPresent
 
 ## Specify an array of imagePullSecrets.
 ## Secrets must be manually created in the namespace.
 ## ref: https://kubernetes.io/docs/concepts/containers/images/#specifying-imagepullsecrets-on-a-pod
+# -- Image pull existing secret
 imagePullSecrets:
 
 # Specify additional env variables
+# -- Container's environment variables
 customEnv:
-  HEAP_OPTS: "-Xms512M -Xmx512M"
-  CONFIG_SERVER_URL: "http://config-server:8010"
-  CONFIG_SERVER_PROFILE: "default"
+  # HEAP_OPTS: "-Xms512M -Xmx512M"
+  # CONFIG_SERVER_URL: "http://config-server:8010"
+  # CONFIG_SERVER_PROFILE: "default"
   # GOOGLE_APPLICATION_CREDENTIALS: "/opt/gcp-sa-key.json"
 
 service:
   ports:
+    # -- Container's ports definition
     - name: "app-port"
       port: 8080
     # - name: "metrics-port"
@@ -33,12 +40,14 @@ service:
   # annotations:
   #   cloud.google.com/backend-config: '{"ports": {"8080": "gcp-alb-backend-config"}}'
 
+# -- Pod's service account
 serviceAccount: {}
   # name: custom-app-sa
   # create: true
   # annotations:
   #   eks.amazonaws.com/role-arn: "arn:aws:iam::xxxxxxxxxxxx:role/eks-custom-application"
 
+# -- Pod's resources definition
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -53,6 +62,7 @@ resources: {}
 
 ## List of volumeMounts for application container
 ## ref: https://kubernetes.io/docs/concepts/storage/volumes/
+# -- Container's volume mounts
 volumeMounts:
   # - name: credentials
   #   mountPath: /etc/creds-volume
@@ -62,6 +72,7 @@ volumeMounts:
 
 ## List of volumeMounts for application container
 ## ref: https://kubernetes.io/docs/concepts/storage/volumes/
+# -- Pod's volumes
 volumes:
   # - name: credentials
   #   secret:
@@ -73,6 +84,7 @@ volumes:
 ## Create HorizontalPodAutoscaler object for deployment type
 #
 autoscaling:
+  # -- Enable horizontal pod autoscaling
   enabled: false
 #   minReplicas: 1
 #   maxReplicas: 10
@@ -87,20 +99,25 @@ autoscaling:
 #       targetAverageUtilization: 6
 
 podDisruptionBudget:
+  # -- Define pod disruption budget
   enabled: false
   policy:
+    # -- Pod disruption policy
     minAvailable: 1
 
 ## Node labels for pod assignment
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
+# -- Pod's node selector. Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
 nodeSelector: {}
 
 ## Taints to tolerate on node assignment:
 ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+# -- Pod's tolerations. Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 tolerations: []
 
 ## Pod scheduling constraints
 ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
+# -- Pod's affinity. Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
 affinity: {}
 
 
@@ -108,21 +125,29 @@ affinity: {}
 ## ref: https://prometheus.io/docs/instrumenting/exporters/
 prometheus:
   serviceMonitor:
+    # -- Prometheus service monitor
     enabled: false
+    # -- Prometheus check interval
     interval: "15s"
 
 ## External Access
 ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
 external:
+  # -- Create service with type loadbalancer for externall access
   enabled: false
   # annotations:
+  # -- Type of created service
   type: LoadBalancer
+  # -- route external traffic to node-local or cluster-wide endpoints
   externalTrafficPolicy: Local
+  # -- Service port name
   portName: http
+  # -- Service port number
   port: 80
 
 # Ingress
 ingress:
+  # -- Create ingress for external access
   enabled: false
   # annotations:
   # ingressClassName: nginx
@@ -134,24 +159,35 @@ ingress:
   #       serviceName: custom-app
   #       servicePort: 80
 
+# -- Pod's liveness probe definition. Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command
 livenessProbe:
 
+# -- Pod's readiness probe definition. Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes
 readinessProbe:
 
+# -- Pod's startup probe definition. Ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes
 startupProbe:
 
 topologySpreadConstraints:
+  # -- Enable topology spread constraints. Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
   enabled: false
 
 # Ingress configuration for Google Cloud Provider ALB
 gcp:
   managedCertificate:
+    # -- Create GCP managed sertificate
     enabled: false
+    # -- Domain for GCP managed sertificate
     domain: foo.bar
   frontendConfig:
+    # -- Create frontend configuration used by GCP ingress
     enabled: false
+    # -- Redirect http requests handled by GCP ALB to https endpoint
     redirectToHttps: true
   backendConfig:
+    # -- Create backend configuration used by GCP ingress
     enabled: false
+    # -- Request's timeout used by GCP ALB 
     timeout: 30
+    # -- Enable GCP ALB logging
     logging: false
