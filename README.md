@@ -42,7 +42,7 @@ $ helm install my-release helm-custom-app/custom-application
 | podDisruptionBudget.enabled | bool | `false` | Define pod disruption budget |
 | podDisruptionBudget.policy.minAvailable | int | `1` | Pod disruption policy |
 | prometheus.serviceMonitor.enabled | bool | `false` | Prometheus service monitor |
-| prometheus.serviceMonitor.interval | string | `"15s"` | Prometheus check interval |
+| prometheus.serviceMonitor.interval | string | `"15s"` | Prometheus scrape interval |
 | readinessProbe | string | `nil` | Pod's [readiness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) definition |
 | replicaCount | int | `1` | Number of pod replicas |
 | resources | object | `{}` | Pod's resources definition |
