@@ -143,9 +143,6 @@ startupProbe:
 topologySpreadConstraints:
   enabled: false
 
-# Define clusterName for additional label in multicluster evironments
-#clusterName: default
-
 # Ingress configuration for Google Cloud Provider ALB
 gcp:
   managedCertificate:

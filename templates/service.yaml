@@ -7,9 +7,6 @@ metadata:
     chart: {{ template "custom-application.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
-    {{- if .Values.clusterName }}
-    cluster: {{ .Values.clusterName }}
-    {{- end }}
   annotations:
   {{- if .Values.service.annotations }}
     {{- with .Values.service.annotations }}
