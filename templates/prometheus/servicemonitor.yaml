@@ -6,7 +6,7 @@ metadata:
   namespace: {{ .Values.prometheus.serviceMonitor.namespace }}
   labels:
     app.kubernetes.io/name: {{ .Release.Name }}
-    helm.sh/chart: {{ .Chart.Name }}
+    helm.sh/chart: {{ template "custom-application.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     {{- if .Values.prometheus.serviceMonitor.additionalLabels }}

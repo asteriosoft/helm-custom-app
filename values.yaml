@@ -19,15 +19,25 @@ imagePullSecrets:
 
 # Specify additional env variables
 customEnv:
+  HEAP_OPTS: "-Xms512M -Xmx512M"
+  CONFIG_SERVER_URL: "http://config-server:8010"
+  CONFIG_SERVER_PROFILE: "default"
+  # GOOGLE_APPLICATION_CREDENTIALS: "/opt/gcp-sa-key.json"
 
-servicePort: 8082
+service:
+  ports:
+    - name: "app-port"
+      port: 8080
+    # - name: "metrics-port"
+    #   port: 8090
+  # annotations:
+  #   cloud.google.com/backend-config: '{"ports": {"8080": "gcp-alb-backend-config"}}'
 
-## JVM Heap Option
-heapOptions: "-Xms512M -Xmx512M"
-
-configServer:
-
-vault:
+serviceAccount: {}
+  # name: custom-app-sa
+  # create: true
+  # annotations:
+  #   eks.amazonaws.com/role-arn: "arn:aws:iam::xxxxxxxxxxxx:role/eks-custom-application"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -40,6 +50,25 @@ resources: {}
   # requests:
   #  cpu: 100m
   #  memory: 128Mi
+
+## List of volumeMounts for application container
+## ref: https://kubernetes.io/docs/concepts/storage/volumes/
+volumeMounts:
+  # - name: credentials
+  #   mountPath: /etc/creds-volume
+  # - name: gcp-sa-key
+  #   mountPath: /opt/gcp-sa-key.json
+  #   subPath: gcp-sa-key.json
+
+## List of volumeMounts for application container
+## ref: https://kubernetes.io/docs/concepts/storage/volumes/
+volumes:
+  # - name: credentials
+  #   secret:
+  #     secretName: creds
+  # - name: gcp-sa-key
+  #   secret:
+  #     secretName: gcp-sa-key
 
 ## Create HorizontalPodAutoscaler object for deployment type
 #
@@ -86,6 +115,7 @@ prometheus:
 ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
 external:
   enabled: false
+  # annotations:
   type: LoadBalancer
   externalTrafficPolicy: Local
   portName: http
@@ -94,7 +124,15 @@ external:
 # Ingress
 ingress:
   enabled: false
-  #ingressClassName: nginx
+  # annotations:
+  # ingressClassName: nginx
+  # hosts:
+  #   - host: foo.bar
+  #     paths:
+  #     - path: /
+  #       pathType: Prefix
+  #       serviceName: custom-app
+  #       servicePort: 80
 
 livenessProbe:
 
@@ -112,7 +150,7 @@ topologySpreadConstraints:
 gcp:
   managedCertificate:
     enabled: false
-    #domain: foo.bar
+    domain: foo.bar
   frontendConfig:
     enabled: false
     redirectToHttps: true
@@ -120,8 +158,3 @@ gcp:
     enabled: false
     timeout: 30
     logging: false
-  serviceAccountKey:
-    enabled: false
-    secretName: gcp-sa-key
-    monthPath: /opt/gcp-sa-key.json
-    subPath: gcp-sa-key.json

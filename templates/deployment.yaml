@@ -8,7 +8,7 @@ metadata:
   name: {{ .Release.Name }}
   labels:
     app: {{ .Release.Name }}
-    chart: {{ .Chart.Name }}
+    chart: {{ template "custom-application.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     namespace: {{ .Release.Namespace }}
@@ -25,52 +25,30 @@ spec:
         release: {{ .Release.Name }}
       annotations:
     spec:
+    {{- if .Values.serviceAccount.name }}
+      serviceAccountName: "{{ .Values.serviceAccount.name }}"
+    {{- end }}
       containers:
         - name: {{ .Release.Name }}
           image: "{{ .Values.image }}:{{ .Values.imageTag }}"
           imagePullPolicy: "{{ .Values.imagePullPolicy }}"
           ports:
-            - name: java-port
-              containerPort: {{ .Values.servicePort}}
+          {{- range $key, $value := .Values.service.ports }}
+            - name: {{ $value.name | quote }}
+              containerPort: {{ $value.port | quote }}
               protocol: TCP
-            {{- if .Values.customPorts }}
-{{ toYaml .Values.customPorts | indent 12 }}
-            {{- end }}
+          {{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
-          {{- if .Values.gcp.serviceAccountKey.enabled }}
+          {{- if .Values.volumeMounts }}
           volumeMounts:
-            - name: gcp-sa-key
-              mountPath: {{ .Values.gcp.serviceAccountKey.monthPath }}
-              subPath: {{ .Values.gcp.serviceAccountKey.subPath }}
-          {{- end }}
+{{ toYaml .Values.volumeMounts | indent 12 }}
+          {{- end}}
           env:
-          - name: HEAP_OPTS
-            value: "{{ .Values.heapOptions }}"
-          {{- if .Values.configServer }}
-          - name: CONFIG_SERVER_URL
-            value: "{{ .Values.configServer.url }}"
-          - name: CONFIG_SERVER_PROFILE
-            value: "{{ .Values.configServer.profile }}"
-          {{- end }}
-          {{- if .Values.vault }}
-          - name: VAULT_ROLE_ID
-            value: "{{ .Values.vault.roleId }}"
-          - name: VAULT_SECRET_ID
-            value: "{{ .Values.vault.secretId }}"
-          - name: VAULT_HOST
-            value: "{{ .Values.vault.host }}"
-          - name: VAULT_BACKEND
-            value: "{{ .Values.vault.backend }}"
-          {{- end }}
-          {{- if .Values.gcp.serviceAccountKey.enabled }}
-          - name: GOOGLE_APPLICATION_CREDENTIALS
-            value: "{{ .Values.gcp.serviceAccountKey.monthPath }}"
-          {{- end }}
-          {{- range $key, $value := .Values.customEnv }}
-          - name: {{ $key | quote }}
-            value: {{ $value | quote }}
-          {{- end }}
+            {{- range $key, $value := .Values.customEnv }}
+            - name: {{ $key | quote }}
+              value: {{ $value | quote }}
+            {{- end }}
           {{- if .Values.livenessProbe }}
           livenessProbe:
 {{ toYaml .Values.livenessProbe | trim | indent 12 }}
@@ -88,11 +66,9 @@ spec:
 {{ toYaml .Values.imagePullSecrets | indent 8 }}
       {{- end }}
       volumes:
-      {{- if .Values.gcp.serviceAccountKey.enabled }}
-        - name: gcp-sa-key
-          secret:
-            secretName: {{ .Values.gcp.serviceAccountKey.secretName }}
-      {{- end }}
+      {{- if .Values.volumes }}
+{{ toYaml .Values.volumes | trim | indent 8 }}
+      {{- end}}
       {{- if .Values.nodeSelector }}
       nodeSelector:
 {{ toYaml .Values.nodeSelector | indent 8 }}

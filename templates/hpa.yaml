@@ -5,7 +5,7 @@ metadata:
   name: {{ .Release.Name }}-hpa
   labels:
     app.kubernetes.io/name: {{ .Release.Name }}
-    helm.sh/chart: {{ .Chart.Name }}
+    helm.sh/chart: {{ template "custom-application.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:

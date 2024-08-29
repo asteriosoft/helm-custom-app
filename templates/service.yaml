@@ -4,20 +4,21 @@ metadata:
   name: {{ .Release.Name }}
   labels:
     app: {{ .Release.Name }}
-    chart: {{ .Chart.Name }}
+    chart: {{ template "custom-application.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
     {{- if .Values.clusterName }}
     cluster: {{ .Values.clusterName }}
     {{- end }}
   annotations:
-  {{- if .Values.gcp.backendConfig.enabled }}
-    cloud.google.com/backend-config: '{"ports": {"{{ .Values.servicePort }}": "gcp-alb-backend-config-{{ .Release.Name }}"}}'
+  {{- if .Values.service.annotations }}
+    {{- with .Values.service.annotations }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- end }}
 spec:
   ports:
-    - name: java-port
-      port: {{ .Values.servicePort }}
+{{ toYaml .Values.service.ports | indent 4 }}
   selector:
     app: {{ .Release.Name }}
     release: {{ .Release.Name }}
