@@ -5,31 +5,25 @@ apiVersion: apps/v1beta2
 {{- end }}
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ include "custom-application.name" . }}
   labels:
-    app: {{ .Release.Name }}
-    chart: {{ template "custom-application.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
-    namespace: {{ .Release.Namespace }}
+{{ include "custom-application.labels" . | indent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ include "custom-application.name" . }}
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}
-        release: {{ .Release.Name }}
+{{ include "custom-application.podLabels" . | indent 8 }}
       annotations:
     spec:
     {{- if .Values.serviceAccount.name }}
       serviceAccountName: "{{ .Values.serviceAccount.name }}"
     {{- end }}
       containers:
-        - name: {{ .Release.Name }}
+        - name: {{ include "custom-application.name" . }}
           image: "{{ .Values.image }}:{{ .Values.imageTag }}"
           imagePullPolicy: "{{ .Values.imagePullPolicy }}"
           ports:
@@ -88,7 +82,7 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: {{ .Release.Name }}
+              app.kubernetes.io/name: {{ include "custom-application.name" . }}
           matchLabelKeys:
             - pod-template-hash
       {{- end }}

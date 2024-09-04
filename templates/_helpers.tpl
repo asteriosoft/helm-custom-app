@@ -1,9 +1,10 @@
+{{/* vim: set filetype=mustache: */}}
 {{/*
 Expand the name of the chart.
 */}}
 {{- define "custom-application.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
-{{- end }}
+{{- default .Release.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 
 {{/*
 Create a default fully qualified app name.
@@ -11,52 +12,113 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "custom-application.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
-{{- end }}
-{{- end }}
+{{- if .Values.fullnameOverride -}}
+{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- $name := default .Chart.Name .Values.nameOverride -}}
+{{- if contains $name .Release.Name -}}
+{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
+{{- else -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
 
 {{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "custom-application.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
-{{- end }}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 
 {{/*
 Common labels
 */}}
 {{- define "custom-application.labels" -}}
+app.kubernetes.io/name: {{ include "custom-application.name" . }}
 helm.sh/chart: {{ include "custom-application.chart" . }}
-{{ include "custom-application.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
+{{- end -}}
+
 
 {{/*
-Selector labels
+Pod labels
 */}}
-{{- define "custom-application.selectorLabels" -}}
+{{- define "custom-application.podLabels" -}}
 app.kubernetes.io/name: {{ include "custom-application.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+helm.sh/chart: {{ include "custom-application.chart" . }}
+{{- if .Chart.AppVersion }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
+{{- end -}}
+
 
 {{/*
-Create the name of the service account to use
+Define resource names
 */}}
-{{- define "custom-application.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "custom-application.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- define "custom-application.namespace" }}
+{{- default (printf "%s" .Release.Namespace) -}}
 {{- end }}
+
+{{- define "custom-application.serviceAccount" }}
+{{- default (printf "%s-account" .Release.Name) -}}
+{{- end }}
+
+{{- define "custom-application.role" }}
+{{- default (printf "%s-role" .Release.Name) -}}
+{{- end }}
+
+{{- define "custom-application.roleBinding" }}
+{{- default (printf "%s-rolebinding" .Release.Name) -}}
+{{- end }}
+
+{{- define "custom-application.pdb" }}
+{{- default (printf "%s-pdb" .Release.Name) -}}
+{{- end }}
+
+{{- define "custom-application.hpa" }}
+{{- default (printf "%s-hpa" .Release.Name) -}}
+{{- end }}
+
+{{- define "custom-application.external-service" }}
+{{- default (printf "%s-external" .Release.Name) -}}
+{{- end }}
+
+{{- define "custom-application.ingress" }}
+{{- default (printf "%s-ingress" .Release.Name) -}}
+{{- end }}
+
+{{- define "custom-application.job" }}
+{{- default (printf "%s-job" .Release.Name) -}}
+{{- end }}
+
+{{- define "custom-application.cronJob" }}
+{{- default (printf "%s-cron" .Release.Name) -}}
+{{- end }}
+
+{{- define "custom-application.secret" }}
+{{- default (printf "%s-secret" .Release.Name) -}}
+{{- end }}
+
+{{- define "custom-application.configmap" }}
+{{- default (printf "%s-configmap" .Release.Name) -}}
+{{- end }}
+
+
+{{/*
+Define GCP custom resource names
+*/}}
+{{- define "custom-application.gcp-frontend-config" }}
+{{- default (printf "%s-front-cfg" .Release.Name) -}}
+{{- end }}
+
+{{- define "custom-application.gcp-backend-config" }}
+{{- default (printf "%s-back-cfg" .Release.Name) -}}
+{{- end }}
+
+{{- define "custom-application.gcp-managed-certificate" }}
+{{- default (printf "%s-crt" .Release.Name) -}}
 {{- end }}

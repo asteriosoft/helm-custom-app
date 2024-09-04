@@ -23,7 +23,7 @@ imagePullPolicy: IfNotPresent
 imagePullSecrets:
 
 # Specify additional env variables
-# -- Container's environment variables
+# -- Container environment variables
 customEnv:
   # HEAP_OPTS: "-Xms512M -Xmx512M"
   # CONFIG_SERVER_URL: "http://config-server:8010"
@@ -32,22 +32,26 @@ customEnv:
 
 service:
   ports:
-    # -- Container's ports definition
+    # -- Container ports definition
     - name: "app-port"
       port: 8080
     # - name: "metrics-port"
     #   port: 8090
-  # annotations:
-  #   cloud.google.com/backend-config: '{"ports": {"8080": "gcp-alb-backend-config"}}'
+  # -- Custom service annotations
+  annotations:
+    # cloud.google.com/backend-config: '{"ports": {"8080": "gcp-alb-backend-config"}}'
+  # -- Custom service labels
+  additionalLabels:
+    # cluster: "prod-lon1"
 
-# -- Pod's service account
+# -- Pod service account
 serviceAccount: {}
   # name: custom-app-sa
   # create: true
   # annotations:
   #   eks.amazonaws.com/role-arn: "arn:aws:iam::xxxxxxxxxxxx:role/eks-custom-application"
 
-# -- Pod's resources definition
+# -- Pod resources definition
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
@@ -62,7 +66,7 @@ resources: {}
 
 ## List of volumeMounts for application container
 ## ref: https://kubernetes.io/docs/concepts/storage/volumes/
-# -- Container's volume mounts
+# -- Container volume mounts definition
 volumeMounts:
   # - name: credentials
   #   mountPath: /etc/creds-volume
@@ -72,7 +76,7 @@ volumeMounts:
 
 ## List of volumeMounts for application container
 ## ref: https://kubernetes.io/docs/concepts/storage/volumes/
-# -- Pod's volumes
+# -- Pod volumes definition
 volumes:
   # - name: credentials
   #   secret:
@@ -107,17 +111,17 @@ podDisruptionBudget:
 
 ## Node labels for pod assignment
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
-# -- Pod's [node selector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)
+# -- Pod [node selector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)
 nodeSelector: {}
 
 ## Taints to tolerate on node assignment:
 ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-# -- Pod's [tolerations](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)
+# -- Pod [tolerations](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/)
 tolerations: []
 
 ## Pod scheduling constraints
 ## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
-# -- Pod's [affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
+# -- Pod [affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity)
 affinity: {}
 
 
@@ -129,6 +133,13 @@ prometheus:
     enabled: false
     # -- Prometheus scrape interval
     interval: "15s"
+    # -- Port name used for prometheus scraping
+    portName: "app-port"
+    # -- Path used for prometheus scraping
+    path: "/metrics/prometheus"
+    # -- Defines the labels which are transferred from the associated Kubernetes Service object onto the ingested metrics
+    targetLabels:
+      # - cluster
 
 ## External Access
 ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer
@@ -140,10 +151,8 @@ external:
   type: LoadBalancer
   # -- route external traffic to node-local or cluster-wide endpoints
   externalTrafficPolicy: Local
-  # -- Service port name
-  portName: http
-  # -- Service port number
-  port: 80
+  # -- External service [target port](https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service)
+  targetPort: "app-port"
 
 # Ingress
 ingress:
@@ -156,16 +165,15 @@ ingress:
   #     paths:
   #     - path: /
   #       pathType: Prefix
-  #       serviceName: custom-app
-  #       servicePort: 80
+  #       servicePort: 8080
 
-# -- Pod's [liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command) definition
+# -- Pod [liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command) definition
 livenessProbe:
 
-# -- Pod's [readiness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) definition
+# -- Pod [readiness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) definition
 readinessProbe:
 
-# -- Pod's [startup probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes) definition
+# -- Pod [startup probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes) definition
 startupProbe:
 
 topologySpreadConstraints:

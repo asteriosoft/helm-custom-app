@@ -1,12 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}
+  name: {{ include "custom-application.name" . }}
   labels:
-    app: {{ .Release.Name }}
-    chart: {{ template "custom-application.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "custom-application.labels" . | indent 4 }}
+    {{- if .Values.service.additionalLabels }}
+{{ toYaml .Values.service.additionalLabels | indent 4 }}
+    {{- end }}
   annotations:
   {{- if .Values.service.annotations }}
     {{- with .Values.service.annotations }}
@@ -17,5 +17,4 @@ spec:
   ports:
 {{ toYaml .Values.service.ports | indent 4 }}
   selector:
-    app: {{ .Release.Name }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "custom-application.name" . }}

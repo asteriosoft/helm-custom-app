@@ -2,7 +2,7 @@
 apiVersion: networking.gke.io/v1beta1
 kind: FrontendConfig
 metadata:
-  name: gcp-alb-frontend-config-{{ .Release.Name }}
+  name: {{ include "custom-application.gcp-frontend-config" . }}
 spec:
   redirectToHttps:
     enabled: {{ .Values.gcp.frontendConfig.redirectToHttps }}

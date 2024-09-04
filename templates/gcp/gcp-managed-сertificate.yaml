@@ -2,7 +2,7 @@
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
-  name: gcp-managed-cert-{{ .Release.Name }}
+  name: {{ include "custom-application.gcp-managed-certificate" . }}
 spec:
   domains:
     - {{ .Values.gcp.managedCertificate.domain }}

@@ -2,12 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ .Release.Name }}-ingress
+  name: {{ include "custom-application.ingress" . }}
   labels:
-    app: {{ .Release.Name }}
-    chart: {{ template "custom-application.chart" . }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+{{ include "custom-application.labels" . | indent 4 }}
   annotations:
     {{- if .Values.ingress.annotations }}
       {{- with .Values.ingress.annotations }}
@@ -28,7 +25,7 @@ spec:
             pathType: {{ .pathType | default "ImplementationSpecific" }}
             backend:
               service:
-                name: {{ .serviceName  }}
+                name: {{ include "custom-application.name" . }}
                 port:
                   number: {{ .servicePort }}
           {{- end }}

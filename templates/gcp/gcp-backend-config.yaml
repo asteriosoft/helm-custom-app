@@ -2,7 +2,7 @@
 apiVersion: cloud.google.com/v1
 kind: BackendConfig
 metadata:
-  name: gcp-alb-backend-config-{{ .Release.Name }}
+  name: {{ include "custom-application.gcp-backend-config" . }}
 spec:
   timeoutSec: {{ .Values.gcp.backendConfig.timeout }}
   logging:
