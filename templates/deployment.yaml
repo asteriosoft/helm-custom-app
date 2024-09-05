@@ -28,8 +28,8 @@ spec:
           imagePullPolicy: "{{ .Values.imagePullPolicy }}"
           ports:
           {{- range $key, $value := .Values.service.ports }}
-            - name: {{ $value.name | quote }}
-              containerPort: {{ $value.port | quote }}
+            - name: {{ $value.name }}
+              containerPort: {{ $value.port }}
               protocol: TCP
           {{- end }}
           resources:
