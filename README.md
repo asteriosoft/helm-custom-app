@@ -2,14 +2,14 @@
 
 A Helm chart for customized deploying of containerized applicatios
 
-![Version: 0.1.3](https://img.shields.io/badge/Version-0.1.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.5](https://img.shields.io/badge/Version-0.1.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Installing the Chart
 
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add helm-custom-app git+https://bitbucket.org/asteriosoft/helm-custom-app?ref=0.1.3
+$ helm repo add helm-custom-app git+https://bitbucket.org/asteriosoft/helm-custom-app?ref=0.1.5
 $ helm install my-release helm-custom-app/custom-application
 ```
 
@@ -38,6 +38,7 @@ $ helm install my-release helm-custom-app/custom-application
 | ingress.enabled | bool | `false` | Create ingress for external access |
 | livenessProbe | string | `nil` | Pod [liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command) definition |
 | nodeSelector | object | `{}` | Pod [node selector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
+| podAnnotations | object | `{}` |  |
 | podDisruptionBudget.enabled | bool | `false` | Define pod disruption budget |
 | podDisruptionBudget.policy.minAvailable | int | `1` | Pod disruption policy |
 | prometheus.serviceMonitor.enabled | bool | `false` | Prometheus service monitor |

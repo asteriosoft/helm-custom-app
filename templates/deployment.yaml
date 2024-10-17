@@ -18,6 +18,7 @@ spec:
       labels:
 {{ include "custom-application.podLabels" . | indent 8 }}
       annotations:
+{{ toYaml .Values.podAnnotations | indent 8 }}
     spec:
     {{- if .Values.serviceAccount.name }}
       serviceAccountName: "{{ .Values.serviceAccount.name }}"

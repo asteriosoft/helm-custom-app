@@ -109,6 +109,9 @@ podDisruptionBudget:
     # -- Pod disruption policy
     minAvailable: 1
 
+## Custom pod annotations
+podAnnotations: {}
+
 ## Node labels for pod assignment
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/
 # -- Pod [node selector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/)
