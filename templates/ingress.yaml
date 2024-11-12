@@ -30,4 +30,12 @@ spec:
                   number: {{ .servicePort }}
           {{- end }}
     {{- end }}
+  tls:
+    {{- range .Values.ingress.hosts }}
+      {{- if and .tls .tls.enabled }}
+    - hosts:
+        - {{ .host }}
+      secretName: {{ .tls.secretName | default (printf "tls-%s" .host) | replace "." "-"  }}
+      {{- end }}
+    {{- end }}
 {{- end }}

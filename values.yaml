@@ -169,6 +169,9 @@ ingress:
   #     - path: /
   #       pathType: Prefix
   #       servicePort: 8080
+  #     tls:
+  #       enabled: false
+  #       secretName: foo.bar-tls
 
 # -- Pod [liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command) definition
 livenessProbe:
