@@ -143,6 +143,8 @@ prometheus:
     # -- Defines the labels which are transferred from the associated Kubernetes Service object onto the ingested metrics
     targetLabels:
       # - cluster
+    # -- Fallback scrape protocol used by Prometheus for scraping metrics
+    fallbackScrapeProtocol:
 
 ## External Access
 ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-loadbalancer

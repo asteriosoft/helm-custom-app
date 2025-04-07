@@ -29,4 +29,7 @@ spec:
   targetLabels:
 {{ toYaml .Values.prometheus.serviceMonitor.targetLabels | indent 4 -}}
   {{- end }}
+  {{- if .Values.prometheus.serviceMonitor.fallbackScrapeProtocol }}
+  fallbackScrapeProtocol: {{ .Values.prometheus.serviceMonitor.fallbackScrapeProtocol }}
+  {{- end }}
 {{- end }}
