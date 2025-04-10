@@ -207,3 +207,6 @@ gcp:
     timeout: 30
     # -- Enable GCP ALB logging
     logging: false
+
+# -- Add extra objects dynamically to this chart
+extraObjects: []

@@ -2,14 +2,14 @@
 
 A Helm chart for customized deploying of containerized applicatios
 
-![Version: 0.1.6](https://img.shields.io/badge/Version-0.1.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.7](https://img.shields.io/badge/Version-0.1.7-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Installing the Chart
 
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add helm-custom-app git+https://bitbucket.org/asteriosoft/helm-custom-app?ref=0.1.6
+$ helm repo add helm-custom-app git+https://bitbucket.org/asteriosoft/helm-custom-app?ref=0.1.7
 $ helm install my-release helm-custom-app/custom-application
 ```
 
@@ -24,6 +24,7 @@ $ helm install my-release helm-custom-app/custom-application
 | external.externalTrafficPolicy | string | `"Local"` | route external traffic to node-local or cluster-wide endpoints |
 | external.targetPort | string | `"app-port"` | External service [target port](https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service) |
 | external.type | string | `"LoadBalancer"` | Type of created service |
+| extraObjects | list | `[]` | Add extra objects dynamically to this chart |
 | gcp.backendConfig.enabled | bool | `false` | Create backend configuration used by GCP ingress |
 | gcp.backendConfig.logging | bool | `false` | Enable GCP ALB logging |
 | gcp.backendConfig.timeout | int | `30` | Request's timeout used by GCP ALB  |
