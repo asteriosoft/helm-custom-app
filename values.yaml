@@ -172,6 +172,7 @@ external:
 ingress:
   # -- Create ingress for external access
   enabled: false
+  # defaultBackend:
   # annotations:
   # ingressClassName: nginx
   # hosts:
