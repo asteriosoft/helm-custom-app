@@ -51,6 +51,15 @@ serviceAccount: {}
   # annotations:
   #   eks.amazonaws.com/role-arn: "arn:aws:iam::xxxxxxxxxxxx:role/eks-custom-application"
 
+# -- Pod termination grace period in seconds
+# terminationGracePeriodSeconds: 30
+
+# -- Container lyfecycle pre stop hook
+# lifecycle:
+#   preStop:
+#     exec:
+#       command: ["/bin/sh", "-c", "sleep 30"]
+
 # -- Pod resources definition
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious

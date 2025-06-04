@@ -23,9 +23,16 @@ spec:
     {{- if .Values.serviceAccount.name }}
       serviceAccountName: "{{ .Values.serviceAccount.name }}"
     {{- end }}
+    {{- if .Values.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+    {{- end }}
       containers:
         - name: {{ include "custom-application.name" . }}
           image: "{{ .Values.image }}:{{ .Values.imageTag }}"
+          {{- if .Values.lifecycle }}
+          lifecycle:
+{{ toYaml .Values.lifecycle | indent 12 }}
+          {{- end }}
           imagePullPolicy: "{{ .Values.imagePullPolicy }}"
           ports:
           {{- range $key, $value := .Values.service.ports }}
@@ -87,4 +94,3 @@ spec:
           matchLabelKeys:
             - pod-template-hash
       {{- end }}
-
