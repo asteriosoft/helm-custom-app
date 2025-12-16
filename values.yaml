@@ -163,6 +163,8 @@ external:
   # annotations:
   # -- Type of created service
   type: LoadBalancer
+  # -- Add http port to service
+  enableHttp: true
   # -- route external traffic to node-local or cluster-wide endpoints
   externalTrafficPolicy: Local
   # -- External service [target port](https://kubernetes.io/docs/concepts/services-networking/service/#defining-a-service)

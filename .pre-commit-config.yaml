@@ -1,7 +1,7 @@
 ---
 repos:
   - repo: https://github.com/norwoodj/helm-docs
-    rev:  ""
+    rev:  "v1.14.2"
     hooks:
       - id: helm-docs-container
         entry: jnorwood/helm-docs:latest

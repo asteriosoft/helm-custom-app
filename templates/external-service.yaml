@@ -15,10 +15,12 @@ spec:
   type: {{ .Values.external.type }}
   externalTrafficPolicy: {{ .Values.external.externalTrafficPolicy }}
   ports:
+    {{- if .Values.external.enableHttp }}
     - name: http
       protocol: TCP
       port: 80
       targetPort: {{ .Values.external.targetPort }}
+    {{- end }}
     - name: https
       protocol: TCP
       port: 443
