@@ -5,6 +5,8 @@
 # -- Number of pod replicas
 replicaCount: 1
 
+deploymentStrategy: {}
+
 ## Image Info
 # -- Docker image source
 image: repo/image
