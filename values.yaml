@@ -32,6 +32,13 @@ customEnv:
   # CONFIG_SERVER_PROFILE: "default"
   # GOOGLE_APPLICATION_CREDENTIALS: "/opt/gcp-sa-key.json"
 
+# -- Container environment variables from
+customEnvFrom:
+  # - name: POD_NAME
+  #   valueFrom:
+  #     fieldRef:
+  #       fieldPath: metadata.name
+
 service:
   ports:
     # -- Container ports definition

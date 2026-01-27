@@ -57,6 +57,9 @@ spec:
             - name: {{ $key | quote }}
               value: {{ $value | quote }}
             {{- end }}
+            {{- if .Values.customEnvFrom }}
+{{ toYaml .Values.customEnvFrom | indent 12 }}
+            {{- end }}
           {{- if .Values.livenessProbe }}
           livenessProbe:
 {{ toYaml .Values.livenessProbe | trim | indent 12 }}

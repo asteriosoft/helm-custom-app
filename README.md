@@ -2,14 +2,14 @@
 
 A Helm chart for customized deploying of containerized applicatios
 
-![Version: 0.1.10](https://img.shields.io/badge/Version-0.1.10-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.11](https://img.shields.io/badge/Version-0.1.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Installing the Chart
 
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add helm-custom-app git+https://bitbucket.org/asteriosoft/helm-custom-app?ref=0.1.10
+$ helm repo add helm-custom-app git+https://bitbucket.org/asteriosoft/helm-custom-app?ref=0.1.11
 $ helm install my-release helm-custom-app/custom-application
 ```
 
@@ -20,6 +20,7 @@ $ helm install my-release helm-custom-app/custom-application
 | affinity | object | `{}` | Pod [affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) |
 | autoscaling.enabled | bool | `false` | Enable horizontal pod autoscaling |
 | customEnv | string | `nil` | Container environment variables |
+| customEnvFrom | string | `nil` | Container environment variables from |
 | deploymentStrategy | object | `{}` |  |
 | external.enableHttp | bool | `true` | Add http port to service |
 | external.enabled | bool | `false` | Create service with type loadbalancer for externall access |
