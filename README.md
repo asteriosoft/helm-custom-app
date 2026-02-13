@@ -2,14 +2,14 @@
 
 A Helm chart for customized deploying of containerized applicatios
 
-![Version: 0.1.11](https://img.shields.io/badge/Version-0.1.11-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.1.12](https://img.shields.io/badge/Version-0.1.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Installing the Chart
 
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add helm-custom-app git+https://bitbucket.org/asteriosoft/helm-custom-app?ref=0.1.11
+$ helm repo add helm-custom-app git+https://bitbucket.org/asteriosoft/helm-custom-app?ref=0.1.12
 $ helm install my-release helm-custom-app/custom-application
 ```
 
@@ -61,6 +61,7 @@ $ helm install my-release helm-custom-app/custom-application
 | startupProbe | string | `nil` | Pod [startup probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes) definition |
 | tolerations | list | `[]` | Pod [tolerations](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/) |
 | topologySpreadConstraints.enabled | bool | `false` | Enable [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/) |
+| topologySpreadConstraints.policy | string | `"ScheduleAnyway"` |  |
 | volumeMounts | string | `nil` | Container volume mounts definition |
 | volumes | string | `nil` | Pod volumes definition |
 

@@ -208,6 +208,7 @@ startupProbe:
 topologySpreadConstraints:
   # -- Enable [topology spread constraints](https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/)
   enabled: false
+  policy: ScheduleAnyway
 
 # Ingress configuration for Google Cloud Provider ALB
 gcp:

@@ -96,7 +96,7 @@ spec:
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
-          whenUnsatisfiable: ScheduleAnyway
+          whenUnsatisfiable: {{ .Values.topologySpreadConstraints.policy }}
           labelSelector:
             matchLabels:
               app.kubernetes.io/name: {{ include "custom-application.name" . }}
