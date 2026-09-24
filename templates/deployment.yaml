@@ -1,8 +1,4 @@
-{{- if .Capabilities.APIVersions.Has "apps/v1" }}
 apiVersion: apps/v1
-{{- else }}
-apiVersion: apps/v1beta2
-{{- end }}
 kind: Deployment
 metadata:
   name: {{ include "custom-application.name" . }}
@@ -23,8 +19,15 @@ spec:
     metadata:
       labels:
 {{ include "custom-application.podLabels" . | indent 8 }}
+      {{- if or .Values.podAnnotations .Values.secrets.data }}
       annotations:
-{{ toYaml .Values.podAnnotations | indent 8 }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- if .Values.secrets.data }}
+        checksum/secret: {{ include (print $.Template.BasePath "/secrets.yaml") . | sha256sum }}
+        {{- end }}
+      {{- end }}
     spec:
     {{- if .Values.serviceAccount.name }}
       serviceAccountName: "{{ .Values.serviceAccount.name }}"
@@ -32,6 +35,10 @@ spec:
     {{- if .Values.terminationGracePeriodSeconds }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
     {{- end }}
+      {{- with .Values.initContainers }}
+      initContainers:
+{{ toYaml . | indent 8 }}
+      {{- end }}
       containers:
         - name: {{ include "custom-application.name" . }}
           image: "{{ .Values.image }}:{{ .Values.imageTag }}"
@@ -57,9 +64,19 @@ spec:
             - name: {{ $key | quote }}
               value: {{ $value | quote }}
             {{- end }}
-            {{- if .Values.customEnvFrom }}
-{{ toYaml .Values.customEnvFrom | indent 12 }}
+            {{- with .Values.customEnvValueFrom }}
+{{ toYaml . | indent 12 }}
             {{- end }}
+{{- if or .Values.customEnvFrom .Values.secrets.data }}
+          envFrom:
+          {{- if .Values.secrets.data }}
+            - secretRef:
+                name: {{ include "custom-application.name" . }}-secret
+          {{- end }}
+          {{- with .Values.customEnvFrom }}
+{{ toYaml . | indent 12 }}
+          {{- end }}
+{{- end }}
           {{- if .Values.livenessProbe }}
           livenessProbe:
 {{ toYaml .Values.livenessProbe | trim | indent 12 }}

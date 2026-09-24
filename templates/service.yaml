@@ -7,11 +7,9 @@ metadata:
     {{- if .Values.service.additionalLabels }}
 {{ toYaml .Values.service.additionalLabels | indent 4 }}
     {{- end }}
+  {{- with .Values.service.annotations }}
   annotations:
-  {{- if .Values.service.annotations }}
-    {{- with .Values.service.annotations }}
-      {{- toYaml . | nindent 4 }}
-    {{- end }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   ports:

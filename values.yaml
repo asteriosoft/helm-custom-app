@@ -33,11 +33,28 @@ customEnv:
   # GOOGLE_APPLICATION_CREDENTIALS: "/opt/gcp-sa-key.json"
 
 # -- Container environment variables from
-customEnvFrom:
+customEnvValueFrom:
   # - name: POD_NAME
   #   valueFrom:
   #     fieldRef:
   #       fieldPath: metadata.name
+
+# -- External objects as container environment variables
+customEnvFrom:
+  # - configMapRef:
+  #     name: special-config
+
+# -- Custom secrets definition
+secrets:
+  data:
+    # DB_PASSWORD: "password"
+    # DB_USER: "user"
+
+# -- [Init containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) definition
+initContainers:
+  # - name: wait-for-db
+  #   image: busybox:1.36
+  #   command: ["sh", "-c", "until nc -z postgres 5432; do sleep 2; done"]
 
 service:
   ports:
@@ -195,6 +212,43 @@ ingress:
   #     tls:
   #       enabled: false
   #       secretName: foo.bar-tls
+
+httpRoute:
+  # -- Create a Gateway API HTTPRoute for external access
+  enabled: false
+  # -- Default backend port when a rule does not set servicePort/backendRefs
+  servicePort: 8080
+  # annotations:
+  # parentRefs:
+  #   - name: my-gateway
+  #     namespace: prod
+  #     sectionName: web
+  # hostnames:
+  #   - foo.bar
+  # rules:
+  #   - matches:
+  #       - path:
+  #           type: PathPrefix
+  #           value: /
+  #     filters:
+  #       - type: ResponseHeaderModifier
+  #         responseHeaderModifier:
+  #           set:
+  #             - name: Access-Control-Allow-Origin
+  #               value: "*"
+  #     servicePort: 8080
+
+# -- Envoy Gateway HTTPRouteFilter objects, referenced from httpRoute rules
+# with `type: ExtensionRef`
+httpRouteFilters:
+  # - name: deny
+  #   spec:
+  #     directResponse:
+  #       statusCode: 403
+  #       contentType: text/plain
+  #       body:
+  #         type: Inline
+  #         inline: "forbidden"
 
 # -- Pod [liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command) definition
 livenessProbe:

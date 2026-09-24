@@ -38,8 +38,12 @@ $ helm install my-release helm-custom-app/custom-application
 | image | string | `"repo/image"` | Docker image source |
 | imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | imagePullSecrets | string | `nil` | Image pull existing secret |
+| initContainers | string | `nil` | [Init containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) definition |
 | imageTag | string | `"0.1.0"` | Docker image tag |
 | ingress.enabled | bool | `false` | Create ingress for external access |
+| httpRoute.enabled | bool | `false` | Create a Gateway API HTTPRoute for external access |
+| httpRoute.servicePort | int | `8080` | Default backend port when a rule does not set servicePort/backendRefs |
+| httpRouteFilters | list | `[]` | Envoy Gateway HTTPRouteFilter objects, referenced from httpRoute rules with `type: ExtensionRef` |
 | livenessProbe | string | `nil` | Pod [liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command) definition |
 | nodeSelector | object | `{}` | Pod [node selector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
 | podAnnotations | object | `{}` |  |
