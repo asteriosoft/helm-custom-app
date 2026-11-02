@@ -2,14 +2,14 @@
 
 A Helm chart for customized deploying of containerized applicatios
 
-![Version: 0.1.12](https://img.shields.io/badge/Version-0.1.12-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 ## Installing the Chart
 
 To install the chart with the release name `my-release`:
 
 ```console
-$ helm repo add helm-custom-app git+https://bitbucket.org/asteriosoft/helm-custom-app?ref=0.1.12
+$ helm repo add helm-custom-app git+https://bitbucket.org/asteriosoft/helm-custom-app?ref=0.2.0
 $ helm install my-release helm-custom-app/custom-application
 ```
 
@@ -20,7 +20,8 @@ $ helm install my-release helm-custom-app/custom-application
 | affinity | object | `{}` | Pod [affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) |
 | autoscaling.enabled | bool | `false` | Enable horizontal pod autoscaling |
 | customEnv | string | `nil` | Container environment variables |
-| customEnvFrom | string | `nil` | Container environment variables from |
+| customEnvFrom | string | `nil` | External objects as container environment variables |
+| customEnvValueFrom | string | `nil` | Container environment variables from |
 | deploymentStrategy | object | `{}` |  |
 | external.enableHttp | bool | `true` | Add http port to service |
 | external.enabled | bool | `false` | Create service with type loadbalancer for externall access |
@@ -35,20 +36,20 @@ $ helm install my-release helm-custom-app/custom-application
 | gcp.frontendConfig.redirectToHttps | bool | `true` | Redirect http requests handled by GCP ALB to https endpoint |
 | gcp.managedCertificate.domain | string | `"foo.bar"` | Domain for GCP managed sertificate |
 | gcp.managedCertificate.enabled | bool | `false` | Create GCP managed sertificate |
+| httpRoute.enabled | bool | `false` | Create a Gateway API HTTPRoute for external access |
+| httpRoute.servicePort | int | `8080` | Default backend port when a rule does not set servicePort/backendRefs |
+| httpRouteFilters | string | `nil` | Envoy Gateway HTTPRouteFilter objects, referenced from httpRoute rules with `type: ExtensionRef` |
 | image | string | `"repo/image"` | Docker image source |
 | imagePullPolicy | string | `"IfNotPresent"` | Image pull policy |
 | imagePullSecrets | string | `nil` | Image pull existing secret |
-| initContainers | string | `nil` | [Init containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) definition |
 | imageTag | string | `"0.1.0"` | Docker image tag |
 | ingress.enabled | bool | `false` | Create ingress for external access |
-| httpRoute.enabled | bool | `false` | Create a Gateway API HTTPRoute for external access |
-| httpRoute.servicePort | int | `8080` | Default backend port when a rule does not set servicePort/backendRefs |
-| httpRouteFilters | list | `[]` | Envoy Gateway HTTPRouteFilter objects, referenced from httpRoute rules with `type: ExtensionRef` |
+| initContainers | string | `nil` | [Init containers](https://kubernetes.io/docs/concepts/workloads/pods/init-containers/) definition |
 | livenessProbe | string | `nil` | Pod [liveness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-a-liveness-command) definition |
 | nodeSelector | object | `{}` | Pod [node selector](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) |
 | podAnnotations | object | `{}` |  |
 | podDisruptionBudget.enabled | bool | `false` | Define pod disruption budget |
-| podDisruptionBudget.policy.minAvailable | int | `1` | Pod disruption policy |
+| podDisruptionBudget.policy | object | `{}` | Pod disruption policy (required when enabled): set exactly one of `minAvailable` or `maxUnavailable` |
 | prometheus.serviceMonitor.enabled | bool | `false` | Prometheus service monitor |
 | prometheus.serviceMonitor.fallbackScrapeProtocol | string | `nil` | Fallback scrape protocol used by Prometheus for scraping metrics |
 | prometheus.serviceMonitor.interval | string | `"15s"` | Prometheus scrape interval |
@@ -58,6 +59,7 @@ $ helm install my-release helm-custom-app/custom-application
 | readinessProbe | string | `nil` | Pod [readiness probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-readiness-probes) definition |
 | replicaCount | int | `1` | Number of pod replicas |
 | resources | object | `{}` | Pod resources definition |
+| secrets | object | `{"data":null}` | Custom secrets definition |
 | service.additionalLabels | string | `nil` | Custom service labels |
 | service.annotations | string | `nil` | Custom service annotations |
 | service.ports[0] | object | `{"name":"app-port","port":8080}` | Container ports definition |

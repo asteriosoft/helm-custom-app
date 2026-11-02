@@ -140,9 +140,8 @@ autoscaling:
 podDisruptionBudget:
   # -- Define pod disruption budget
   enabled: false
-  policy:
-    # -- Pod disruption policy
-    minAvailable: 1
+  # -- Pod disruption policy (required when enabled): set exactly one of `minAvailable` or `maxUnavailable`
+  policy: {}
 
 ## Custom pod annotations
 podAnnotations: {}

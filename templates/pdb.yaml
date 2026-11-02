@@ -1,4 +1,12 @@
 {{- if .Values.podDisruptionBudget.enabled }}
+{{- $policy := .Values.podDisruptionBudget.policy | default dict }}
+{{- $hasMin := not (kindIs "invalid" $policy.minAvailable) }}
+{{- $hasMax := not (kindIs "invalid" $policy.maxUnavailable) }}
+{{- if and $hasMin $hasMax }}
+{{- fail "podDisruptionBudget.policy: set only one of minAvailable or maxUnavailable, not both" }}
+{{- else if not (or $hasMin $hasMax) }}
+{{- fail "podDisruptionBudget.enabled is true, but podDisruptionBudget.policy has neither minAvailable nor maxUnavailable set" }}
+{{- end }}
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
